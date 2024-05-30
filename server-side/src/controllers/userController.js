@@ -84,16 +84,6 @@ const getUserById = async (req, res, next) => {
   res.send({ user });
 };
 
-// verify logged-in user from admin panel
-const verifyUser = async (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) return next(new AppError("No token provided!", 404));
-  const { id } = jwt.verify(token, process.env.JWT_SECRET);
-  const user = await User.findById(id);
-  res.send({ loggedInUser: user });
-};
-
 // update user info
 const updateUser = async (req, res, next) => {
   const { id } = req.user;
@@ -149,20 +139,10 @@ const updateUser = async (req, res, next) => {
   res.send({ user });
 };
 
-// delete user
-const deleteUser = async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findByIdAndDelete(id);
-
-  res.send({ user });
-};
-
 module.exports = {
   signUp,
   getUserById,
   getAllUsers,
   updateUser,
-  deleteUser,
   login,
-  verifyUser,
 };

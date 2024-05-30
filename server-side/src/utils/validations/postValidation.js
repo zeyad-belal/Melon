@@ -21,4 +21,4 @@ const postCreationValidation = (req, res, next) => {
   next();
 };
 
-module.exports = { postCreationValidation, postUpdateValidation };
+module.exports = { postCreationValidation };
