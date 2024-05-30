@@ -15,5 +15,4 @@
 - **POST** `/posts`
 - **GET** `/posts`
 - **GET** `/posts/:id`
-- **PUT** `/posts/:id`
 - **DELETE** `/posts/:id`

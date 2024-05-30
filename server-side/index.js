@@ -21,7 +21,6 @@ const io = socketIo(server, {
 // import routes
 const usersRoutes = require("./src/routes/userRoutes");
 const postRoutes = require("./src/routes/postRoutes");
-const verfiyUserToken = require("./src/middlewares/verfiyUserToken");
 
 // parsing incoming requests
 app.use(express.json());
