@@ -6,7 +6,6 @@ const upload = require("../utils/multer");
 // controllers and validations
 const {
   getAllPosts,
-  getPostbyCategoryId,
   createPost,
   getPost,
   deletePost,
@@ -22,8 +21,6 @@ router.post("/", upload.array("images"), postCreationValidation, createPost);
 // get all posts
 router.get("/", getAllPosts);
 
-// get  posts by gategory id
-router.get("/filtered/:id", getPostbyCategoryId);
 
 // get a post by post id
 router.get("/:id", getPost);

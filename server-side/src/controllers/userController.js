@@ -73,7 +73,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(id).populate({
-    path: "saved_items.service",
+    path: "saved_items.post",
     populate: {
       path: "user_id",
       model: "User",

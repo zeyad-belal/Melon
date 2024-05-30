@@ -20,7 +20,7 @@ const io = socketIo(server, {
 
 // import routes
 const usersRoutes = require("./src/routes/userRoutes");
-const serviceRoutes = require("./src/routes/postRoutes");
+const postRoutes = require("./src/routes/postRoutes");
 const verfiyUserToken = require("./src/middlewares/verfiyUserToken");
 
 // parsing incoming requests
@@ -31,7 +31,7 @@ app.use(cors());
 // Routes
 app.use("/users", usersRoutes);
 
-app.use("/services", serviceRoutes);
+app.use("/posts", postRoutes);
 
 
 
@@ -58,8 +58,6 @@ io.on('connection', (socket) => {
     console.log(`User ${socket.id} joined room ${room}`);
   });
 });
-
-
 
 
 
