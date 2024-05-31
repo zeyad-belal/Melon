@@ -8,9 +8,8 @@ const loginSchema = joi.object({
 
 const signupSchema = joi.object({
   email: joi.string().email().required(),
-  password: joi.string().min(6).max(20).required(),
+  password: joi.string().min(3).max(20).required(),
   name: joi.string().min(3).max(20).required(),
-  saved_items: joi.array(),
 });
 
 const loginValidation = (req, res, next) => {

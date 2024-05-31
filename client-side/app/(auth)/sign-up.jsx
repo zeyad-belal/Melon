@@ -21,10 +21,11 @@ const SignUp = () => {
   async function submit() {
     if (!form.name || !form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
+      return
     }
     setSubmitting(true);
-
     try {
+      console.log('')
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/users/signup`,
         {
@@ -33,7 +34,7 @@ const SignUp = () => {
           password: form.password,
         }
       );
-      console.log("response", response);
+      console.log("responssssssssssse", response);
       console.log("response.data.newUser", response.data.newUser);
       setUser(response.data.newUser);
       setIsLogged(true);
