@@ -9,6 +9,7 @@ const {
   createPost,
   getPost,
   getPostsByUserId,
+  searchPostsByKeyword,
   deletePost,
 } = require("../controllers/postController");
 
@@ -28,6 +29,9 @@ router.get('/posts/user', getPostsByUserId);
 
 // get a post by post id
 router.get("/:id", getPost);
+
+// post search
+router.get("/:id", searchPostsByKeyword);
 
 // delete a post
 router.delete("/:id", deletePost);

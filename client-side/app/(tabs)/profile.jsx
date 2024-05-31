@@ -10,7 +10,7 @@ import { EmptyState, InfoBox, VideoCard } from "../../components";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
+  const { posts, setPosts } = useState(getAllPosts);
 
   const logout = async () => {
     setUser(null);
@@ -18,6 +18,26 @@ const Profile = () => {
 
     router.replace("/sign-in");
   };
+
+
+
+  async function getUserPosts() {
+    setRefreshing(true);
+    try {
+      const response = await axios.get(`${process.env.EXPO_API_URL}//posts/user`,{
+        user_id:user.id
+      });
+      setPosts(response.data);
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  useEffect(() => {
+    getUserPosts();
+  }, []);
 
   return (
     <SafeAreaView className="bg-primary h-full">

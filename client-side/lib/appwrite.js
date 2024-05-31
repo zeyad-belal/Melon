@@ -32,70 +32,7 @@ const databases = new Databases(client);
 
 
 
-// Upload File
-export async function uploadFile(file, type) {
-  if (!file) return;
 
-  const { mimeType, ...rest } = file;
-  const asset = { type: mimeType, ...rest };
-
-  try {
-    const uploadedFile = await storage.createFile(
-      appwriteConfig.storageId,
-      ID.unique(),
-      asset
-    );
-
-    const fileUrl = await getFilePreview(uploadedFile.$id, type);
-    return fileUrl;
-  } catch (error) {
-    throw new Error(error);
-  }
-}
-
-// Get File Preview
-export async function getFilePreview(fileId, type) {
-  let fileUrl;
-
-  try {
-    if (type === "video") {
-      fileUrl = storage.getFileView(appwriteConfig.storageId, fileId);
-    } else if (type === "image") {
-      fileUrl = storage.getFilePreview(
-        appwriteConfig.storageId,
-        fileId,
-        2000,
-        2000,
-        "top",
-        100
-      );
-    } else {
-      throw new Error("Invalid file type");
-    }
-
-    if (!fileUrl) throw Error;
-
-    return fileUrl;
-  } catch (error) {
-    throw new Error(error);
-  }
-}
-
-
-// Get video posts created by user
-export async function getUserPosts(userId) {
-  try {
-    const posts = await databases.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.videoCollectionId,
-      [Query.equal("creator", userId)]
-    );
-
-    return posts.documents;
-  } catch (error) {
-    throw new Error(error);
-  }
-}
 
 // Get video posts that matches search query
 export async function searchPosts(query) {

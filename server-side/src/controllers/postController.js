@@ -81,6 +81,29 @@ const getPostsByUserId = async (req, res, next) => {
   }
 };
 
+const searchPostsByKeyword = async (req, res, next) => {
+  try {
+    // Check if search string is provided
+    const searchString = req.keyword;
+    if (!searchString) {
+      return next(new AppError("Keyword is required.", 400));
+    }
+
+    // Create a regex pattern for case-insensitive search
+    const regex = new RegExp(searchString, 'i');
+
+    // Find posts that have at least one keyword matching the search string
+    const posts = await Post.find({ keywords: regex }).populate("user_id");
+
+    if (!posts || posts.length === 0) {
+      return next(new AppError("No posts found for the given keyword.", 404));
+    }
+
+    res.send(posts);
+  } catch (error) {
+    return next(new AppError("Something went wrong while searching for posts.", 500));
+  }
+};
 
 const deletePost = async (req, res, next) => {
   // Check if id is a valid objectId
@@ -118,5 +141,6 @@ module.exports = {
   createPost,
   getPost,
   getPostsByUserId,
+  searchPostsByKeyword,
   deletePost,
 };
