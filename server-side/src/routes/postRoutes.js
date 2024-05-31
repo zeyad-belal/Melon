@@ -31,7 +31,7 @@ router.get('/posts/user', getPostsByUserId);
 router.get("/:id", getPost);
 
 // post search
-router.get("/:id", searchPostsByKeyword);
+router.get("/search", searchPostsByKeyword);
 
 // delete a post
 router.delete("/:id", deletePost);

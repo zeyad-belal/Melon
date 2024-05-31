@@ -6,7 +6,7 @@ import { icons } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
 import { getUserPosts } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { EmptyState, InfoBox, VideoCard } from "../../components";
+import { EmptyState, ImageCard, InfoBox, VideoCard } from "../../components";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
@@ -19,14 +19,15 @@ const Profile = () => {
     router.replace("/sign-in");
   };
 
-
-
   async function getUserPosts() {
     setRefreshing(true);
     try {
-      const response = await axios.get(`${process.env.EXPO_API_URL}//posts/user`,{
-        user_id:user.id
-      });
+      const response = await axios.get(
+        `${process.env.EXPO_PUBLIC_API_URL}//posts/user`,
+        {
+          user_id: user.id,
+        }
+      );
       setPosts(response.data);
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -45,12 +46,11 @@ const Profile = () => {
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard
-            title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
-            creator={item.creator.name}
-            avatar={item.creator.avatar}
+          <ImageCard
+            description={item.description}
+            image={item.image}
+            creator={item.user_id.name}
+            avatar={item.user_id.avatar}
           />
         )}
         ListEmptyComponent={() => (

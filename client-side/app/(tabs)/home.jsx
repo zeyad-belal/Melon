@@ -21,7 +21,9 @@ const Home = () => {
   async function getPosts() {
     setRefreshing(true);
     try {
-      const response = await axios.get(`${process.env.EXPO_API_URL}/posts`);
+      const response = await axios.get(
+        `${process.env.EXPO_PUBLIC_API_URL}/posts`
+      );
       setPosts(response.data);
     } catch (error) {
       Alert.alert("Error", error.message);

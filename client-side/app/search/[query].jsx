@@ -3,17 +3,30 @@ import { useLocalSearchParams } from "expo-router";
 import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import useAppwrite from "../../lib/useAppwrite";
-import { searchPosts } from "../../lib/appwrite";
-import { EmptyState, SearchInput, VideoCard } from "../../components";
+import { EmptyState, ImageCard, SearchInput } from "../../components";
 
 const Search = () => {
   const { query } = useLocalSearchParams();
-  const { data: posts, refetch } = useAppwrite(() => searchPosts(query));
+  const { posts, setPosts } = useState(getAllPosts);
 
-  useEffect(() => {
-    refetch();
-  }, [query]);
+  async function getSearchPosts() {
+    setRefreshing(true);
+    try {
+      const response = await axios.get(
+        `${process.env.EXPO_PUBLIC_API_URL}//posts/search`,
+        {
+          user_id: user.id,
+        }
+      );
+      setPosts(response.data);
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  useEffect(() => {}, [query]);
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -21,12 +34,11 @@ const Search = () => {
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard
-            title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
-            creator={item.creator.name}
-            avatar={item.creator.avatar}
+          <ImageCard
+            description={item.description}
+            image={item.image}
+            creator={item.user_id.name}
+            avatar={item.user_id.avatar}
           />
         )}
         ListHeaderComponent={() => (

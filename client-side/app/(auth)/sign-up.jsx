@@ -8,37 +8,39 @@ import { CustomButton, FormField } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import axios from "axios";
 
-
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
 
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    userName: "",
+    name: "",
     email: "",
     password: "",
   });
 
   async function submit() {
-    if (!form.userName || !form.email || !form.password) {
+    if (!form.name || !form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
     }
     setSubmitting(true);
 
     try {
       const response = await axios.post(
-        `${process.env.EXPO_API_URL}/users/signup`,
+        `${process.env.EXPO_PUBLIC_API_URL}/users/signup`,
         {
-          name:userName,
-          email,
-          password,
+          name: form.name,
+          email: form.email,
+          password: form.password,
         }
       );
+      console.log("response", response);
+      console.log("response.data.newUser", response.data.newUser);
       setUser(response.data.newUser);
       setIsLogged(true);
       router.replace("/home");
     } catch (error) {
-      Alert.alert("Error", error.message);
+      console.log(error);
+      Alert.alert("Error", error);
     } finally {
       setSubmitting(false);
     }
@@ -64,9 +66,9 @@ const SignUp = () => {
           </Text>
 
           <FormField
-            title="name"
-            value={form.userName}
-            handleChangeText={(e) => setForm({ ...form, userName: e })}
+            title="Name"
+            value={form.name}
+            handleChangeText={(e) => setForm({ ...form, name: e })}
             otherStyles="mt-10"
           />
 

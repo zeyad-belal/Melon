@@ -55,7 +55,7 @@ const Create = () => {
       formData.append("description", form.description);
       formData.append("image", form.image);
 
-      await axios.post(`${process.env.EXPO_API_URL}/posts`, formData, {
+      await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/posts`, formData, {
         headers: { Authorization: `${cookies.UserToken}` },
       });
 

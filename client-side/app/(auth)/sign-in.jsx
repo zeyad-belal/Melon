@@ -23,7 +23,7 @@ const SignIn = () => {
     setSubmitting(true);
     try {
       const response = await axios.post(
-        `${process.env.EXPO_API_URL}/users/login`,
+        `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
         { email, password }
       );
 
