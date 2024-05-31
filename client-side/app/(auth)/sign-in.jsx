@@ -5,8 +5,8 @@ import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 
 import { images } from "../../constants";
 import { CustomButton, FormField } from "../../components";
-import { getCurrentUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import axios from "axios";
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -16,17 +16,18 @@ const SignIn = () => {
     password: "",
   });
 
-  const submit = async () => {
-    if (form.email === "" || form.password === "") {
+  async function submit() {
+    if (!form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
     }
-
     setSubmitting(true);
-
     try {
-      await signIn(form.email, form.password);
-      const result = await getCurrentUser();
-      setUser(result);
+      const response = await axios.post(
+        `${process.env.EXPO_API_URL}/users/login`,
+        { email, password }
+      );
+
+      setUser(response.data.user);
       setIsLogged(true);
 
       Alert.alert("Success", "User signed in successfully");
@@ -36,7 +37,7 @@ const SignIn = () => {
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -54,7 +55,7 @@ const SignIn = () => {
           />
 
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Log in to Aora
+            Log in to Melon
           </Text>
 
           <FormField

@@ -4,7 +4,7 @@ const AppError = require("../AppError");
 const postCreationValidationSchema = Joi.object({
   description: Joi.string().required(),
   keywords: Joi.string(),
-  images: Joi.array(),
+  images: Joi.object(),
   user_id: Joi.string()
 });
 

@@ -1,23 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 
 import { images } from "../../constants";
-import useAppwrite from "../../lib/useAppwrite";
-import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
-import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
+import { getAllPosts } from "../../lib/appwrite";
+import { EmptyState, SearchInput, Trending, ImageCard } from "../../components";
 
 const Home = () => {
-  const { data: posts, refetch } = useAppwrite(getAllPosts);
-  const { data: latestPosts } = useAppwrite(getLatestPosts);
+  const { posts, setPosts } = useState(getAllPosts);
+  const latestPosts = posts.slice(0, 5);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    await getPosts();
     setRefreshing(false);
   };
+
+  async function getPosts() {
+    setRefreshing(true);
+    try {
+      const response = await axios.get(`${process.env.EXPO_API_URL}/posts`);
+      setPosts(response.data);
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  useEffect(() => {
+    getPosts();
+  }, []);
 
   // one flatlist
   // with list header
@@ -31,12 +46,11 @@ const Home = () => {
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard
-            title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
+          <ImageCard
+            description={item.description}
+            image={item.image}
+            creator={item.user_id.name}
+            avatar={item.user_id.avatar}
           />
         )}
         ListHeaderComponent={() => (
@@ -45,9 +59,6 @@ const Home = () => {
               <View>
                 <Text className="font-pmedium text-sm text-gray-100">
                   Welcome Back
-                </Text>
-                <Text className="text-2xl font-psemibold text-white">
-                  JSMastery
                 </Text>
               </View>
 
@@ -64,7 +75,7 @@ const Home = () => {
 
             <View className="w-full flex-1 pt-5 pb-8">
               <Text className="text-lg font-pregular text-gray-100 mb-3">
-                Latest Videos
+                Latest Posts
               </Text>
 
               <Trending posts={latestPosts ?? []} />
@@ -72,10 +83,7 @@ const Home = () => {
           </View>
         )}
         ListEmptyComponent={() => (
-          <EmptyState
-            title="No Videos Found"
-            subtitle="No videos created yet"
-          />
+          <EmptyState title="No Posts Found" subtitle="No Posts created yet" />
         )}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

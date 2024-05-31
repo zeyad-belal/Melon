@@ -4,14 +4,12 @@ const AppError = require("../AppError");
 const loginSchema = joi.object({
   email: joi.string().email().required(),
   password: joi.string().min(6).max(20).required(),
-  rememberMe: joi.boolean(),
 });
 
 const signupSchema = joi.object({
   email: joi.string().email().required(),
   password: joi.string().min(6).max(20).required(),
-  first_name: joi.string().min(3).max(20).required(),
-  last_name: joi.string().min(3).max(20).required(),
+  name: joi.string().min(3).max(20).required(),
   saved_items: joi.array(),
 });
 

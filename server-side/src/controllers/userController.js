@@ -6,14 +6,13 @@ const imageKit = require("../utils/imageKit");
 
 // registration
 const signUp = async (req, res, next) => {
-  const { first_name, last_name, email, password, saved_items, bio } = req.body;
+  const { name, email, password, saved_items, bio } = req.body;
   if (!email || !password)
     return next(new AppError("email and password required", 401));
 
   try {
     const newUser = await User.create({
-      first_name,
-      last_name,
+      name,
       email,
       password,
       saved_items,
@@ -38,7 +37,7 @@ const signUp = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const { email, password, rememberMe } = req.body;
+  const { email, password } = req.body;
   if (!email || !password)
     return next(new AppError("email and password are required", 401));
 
@@ -51,12 +50,7 @@ const login = async (req, res, next) => {
 
   let token;
 
-  // Calculate the expiration time in seconds based on rememberMe
-  const expirationInSeconds = rememberMe ? 365 * 24 * 60 * 60 : 60 * 60; // 1 year or 1 hour
-
-  token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: expirationInSeconds,
-  });
+  token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
   user.password = undefined;
 
@@ -87,7 +81,7 @@ const getUserById = async (req, res, next) => {
 // update user info
 const updateUser = async (req, res, next) => {
   const { id } = req.user;
-  const { first_name, last_name, email, saved_items, bio } = req.body;
+  const { name, email, saved_items, bio } = req.body;
   let { avatar, avatarID } = req.body;
 
   // handle new image uploud
@@ -132,7 +126,7 @@ const updateUser = async (req, res, next) => {
 
   const user = await User.findByIdAndUpdate(
     id,
-    { first_name, last_name, email, avatar, avatarID, saved_items, bio },
+    { name, email, avatar, avatarID, saved_items, bio },
     { new: true }
   );
 

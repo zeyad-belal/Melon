@@ -1,4 +1,3 @@
-const fs = require("fs");
 const { Types } = require("mongoose");
 
 const Post = require("../models/Post");
@@ -8,7 +7,7 @@ const imageKit = require("../utils/imageKit");
 const User = require("../models/User");
 
 const createPost = async (req, res, next) => {
-  if (!req.files) {
+  if (!req.file) {
     return next(new AppError("Upload at least one image of the Post", 404));
   }
 
@@ -18,27 +17,23 @@ const createPost = async (req, res, next) => {
   });
   if (!user) return next(new AppError("User does not exist.", 404));
 
-  // handle images upload
-  let imagesInfo = [];
-  for (let i = 0; i < req.files.length; i++) {
-    const image = req.files[i];
-    const res = await imageKit.upload({
-      file: image.buffer.toString("base64"),
-      fileName: image.originalname,
-      folder: "Melon-posts",
-    });
-    imagesInfo.push(res);
-  }
+  // handle image upload
+  const image = req.file;
+  const imageInfo = await imageKit.upload({
+    file: image.buffer.toString("base64"),
+    fileName: image.originalname,
+    folder: "Melon-posts",
+  });
 
   const createdPost = await Post.create({
     name: req.body.name,
     description: req.body.description,
     keywords: req.body.keywords.split(","),
-    images: imagesInfo,
+    image: imageInfo,
     user_id: user._id
   });
 
-  const toBeSentDocument = await Post.findById(createdPost._id).populate("user_id")
+  const toBeSentDocument = await Post.findById(createdPost._id).populate("user_id");
 
   res.send({ message: "Post was created successfully!", toBeSentDocument });
 };
@@ -61,37 +56,67 @@ const getPost = async (req, res, next) => {
   res.send(post);
 };
 
+const getPostsByUserId = async (req, res, next) => {
+  try {
+    // check if user_id is provided
+    if (!req.query.user_id) {
+      return next(new AppError("User ID is required.", 400));
+    }
+
+    // check if user_id is a valid objectId
+    if (!Types.ObjectId.isValid(req.query.user_id)) {
+      return next(new AppError("Invalid User ID.", 400));
+    }
+
+    // find posts by user_id
+    const posts = await Post.find({ user_id: req.query.user_id }).populate("user_id");
+
+    if (!posts || posts.length === 0) {
+      return next(new AppError("No posts found for the given user ID.", 404));
+    }
+
+    res.send(posts);
+  } catch (error) {
+    return next(new AppError("Something went wrong while fetching posts by user ID.", 500));
+  }
+};
+
 
 const deletePost = async (req, res, next) => {
-  // check if id is a valid objectId
+  // Check if id is a valid objectId
   if (!Types.ObjectId.isValid(req.params.id))
     return next(new AppError("Invalid ObjectId.", 401));
 
-  const post = await Post.findByIdAndDelete(req.params.id);
-  console.log(post)
-  if (!post) return next(new AppError("post was not found.", 404));
+  try {
+    // Find the post by id
+    const post = await Post.findById(req.params.id);
+    if (!post) return next(new AppError("Post was not found.", 404));
 
-  const imagesID = post.images.map((image) => image.fileId);
+    // Get the image ID to be deleted
+    const imageID = post.image.fileId;
 
-  // delete post's images from imageKit
-  if (post.images.length) {
-    const res = await imageKit.bulkDeleteFiles(imagesID);
+    // Delete the post
+    const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    if (!deletedPost) return next(new AppError("Post was not found.", 404));
 
-    if (!res)
+    // Delete the image from ImageKit
+    const deletionResult = await imageKit.deleteFile(imageID);
+    if (!deletionResult)
       return next(
-        new AppError(
-          "There was an error in deleting post images from ImageKit.",
-          401
-        )
+        new AppError("Error occurred while deleting post image from ImageKit.", 500)
       );
-  }
 
-  res.send({ message: "post was deleted successfully!", post });
+    res.send({ message: "Post was deleted successfully!", post: deletedPost });
+  } catch (error) {
+    return next(new AppError("Error occurred while deleting the post.", 500));
+  }
 };
+
 
 module.exports = {
   getAllPosts,
   createPost,
   getPost,
+  getPostsByUserId,
   deletePost,
 };

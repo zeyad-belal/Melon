@@ -13,7 +13,7 @@ const postSchema = new Schema({
     type : Array
   },
   images: {
-    type: Array
+    type: Object 
   },
   user_id: {
     type: Schema.Types.ObjectId,

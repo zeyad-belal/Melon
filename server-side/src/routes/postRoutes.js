@@ -8,6 +8,7 @@ const {
   getAllPosts,
   createPost,
   getPost,
+  getPostsByUserId,
   deletePost,
 } = require("../controllers/postController");
 
@@ -15,12 +16,15 @@ const {
   postCreationValidation,
 } = require("../utils/validations/postValidation");
 
-// create a post
-router.post("/", upload.array("images"), postCreationValidation, createPost);
+// create a post 
+router.post("/", upload.single("image"), postCreationValidation, createPost);
+
 
 // get all posts
 router.get("/", getAllPosts);
 
+// get user posts
+router.get('/posts/user', getPostsByUserId);
 
 // get a post by post id
 router.get("/:id", getPost);

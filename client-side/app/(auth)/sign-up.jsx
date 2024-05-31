@@ -4,38 +4,45 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 
 import { images } from "../../constants";
-import { createUser } from "../../lib/appwrite";
 import { CustomButton, FormField } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import axios from "axios";
+
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
 
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    username: "",
+    userName: "",
     email: "",
     password: "",
   });
 
-  const submit = async () => {
-    if (form.username === "" || form.email === "" || form.password === "") {
+  async function submit() {
+    if (!form.userName || !form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
     }
-
     setSubmitting(true);
-    try {
-      const result = await createUser(form.email, form.password, form.username);
-      setUser(result);
-      setIsLogged(true);
 
+    try {
+      const response = await axios.post(
+        `${process.env.EXPO_API_URL}/users/signup`,
+        {
+          name:userName,
+          email,
+          password,
+        }
+      );
+      setUser(response.data.newUser);
+      setIsLogged(true);
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -53,13 +60,13 @@ const SignUp = () => {
           />
 
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Sign Up to Aora
+            Sign Up to Melon
           </Text>
 
           <FormField
-            title="Username"
-            value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
+            title="name"
+            value={form.userName}
+            handleChangeText={(e) => setForm({ ...form, userName: e })}
             otherStyles="mt-10"
           />
 

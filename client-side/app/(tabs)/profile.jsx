@@ -4,7 +4,7 @@ import { View, Image, FlatList, TouchableOpacity } from "react-native";
 
 import { icons } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
-import { getUserPosts, signOut } from "../../lib/appwrite";
+import { getUserPosts } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { EmptyState, InfoBox, VideoCard } from "../../components";
 
@@ -13,7 +13,6 @@ const Profile = () => {
   const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
 
   const logout = async () => {
-    await signOut();
     setUser(null);
     setIsLogged(false);
 
@@ -30,7 +29,7 @@ const Profile = () => {
             title={item.title}
             thumbnail={item.thumbnail}
             video={item.video}
-            creator={item.creator.username}
+            creator={item.creator.name}
             avatar={item.creator.avatar}
           />
         )}
@@ -62,7 +61,7 @@ const Profile = () => {
             </View>
 
             <InfoBox
-              title={user?.username}
+              title={user?.name}
               containerStyles="mt-5"
               titleStyles="text-lg"
             />
