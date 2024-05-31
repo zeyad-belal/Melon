@@ -6,7 +6,7 @@ const imageKit = require("../utils/imageKit");
 
 // registration
 const signUp = async (req, res, next) => {
-  const { name, email, password, saved_items, bio } = req.body;
+  const { name, email, password } = req.body;
   if (!email || !password)
     return next(new AppError("email and password required", 401));
 
@@ -14,9 +14,7 @@ const signUp = async (req, res, next) => {
     const newUser = await User.create({
       name,
       email,
-      password,
-      saved_items,
-      bio,
+      password
     });
     newUser.password = undefined;
 
@@ -81,7 +79,7 @@ const getUserById = async (req, res, next) => {
 // update user info
 const updateUser = async (req, res, next) => {
   const { id } = req.user;
-  const { name, email, saved_items, bio } = req.body;
+  const { name, email } = req.body;
   let { avatar, avatarID } = req.body;
 
   // handle new image uploud
