@@ -6,6 +6,7 @@ const imageKit = require("../utils/imageKit");
 
 // registration
 const signUp = async (req, res, next) => {
+  console.log('req recieved !')
   const { name, email, password } = req.body;
   if (!email || !password)
     return next(new AppError("email and password required", 401));

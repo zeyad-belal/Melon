@@ -21,19 +21,24 @@ const SignUp = () => {
   async function submit() {
     if (!form.name || !form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
-      return
+      return;
     }
     setSubmitting(true);
     try {
-      console.log('')
-      const response = await axios.post(
-        `${process.env.EXPO_PUBLIC_API_URL}/users/signup`,
-        {
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL + "/users/signup";
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           name: form.name,
           email: form.email,
           password: form.password,
-        }
-      );
+        }),
+      };
+      const response = await fetch(apiUrl, requestOptions);
       console.log("responssssssssssse", response);
       console.log("response.data.newUser", response.data.newUser);
       setUser(response.data.newUser);
