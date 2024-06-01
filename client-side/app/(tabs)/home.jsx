@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, Image, RefreshControl, Text, View } from "react-native";
+import { Alert, FlatList, Image, RefreshControl, Text, View } from "react-native";
 
 import { images } from "../../constants";
-import { getAllPosts } from "../../lib/appwrite";
 import { EmptyState, SearchInput, Trending, ImageCard } from "../../components";
 
 const Home = () => {
-  const { posts, setPosts } = useState(getAllPosts);
-  const latestPosts = posts.slice(0, 5);
+  const [ posts, setPosts ] = useState([]);
+  const latestPosts = posts?.slice(0, 5);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -21,16 +20,21 @@ const Home = () => {
   async function getPosts() {
     setRefreshing(true);
     try {
-      const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/posts`
-      );
-      setPosts(response.data);
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseData = await response.json();
+      setPosts(responseData);
     } catch (error) {
+      console.error(error);
       Alert.alert("Error", error.message);
     } finally {
       setRefreshing(false);
     }
   }
+  
 
   useEffect(() => {
     getPosts();

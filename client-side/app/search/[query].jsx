@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,7 +7,7 @@ import { EmptyState, ImageCard, SearchInput } from "../../components";
 
 const Search = () => {
   const { query } = useLocalSearchParams();
-  const { posts, setPosts } = useState(getAllPosts);
+  const [ posts, setPosts ] = useState([]);
 
   async function getSearchPosts() {
     setRefreshing(true);
@@ -26,7 +26,9 @@ const Search = () => {
     }
   }
 
-  useEffect(() => {}, [query]);
+  useEffect(() => {
+    getSearchPosts();
+  }, [query]);
 
   return (
     <SafeAreaView className="bg-primary h-full">

@@ -1,16 +1,16 @@
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Image, FlatList, TouchableOpacity } from "react-native";
+import { View, Image, FlatList, TouchableOpacity, Alert } from "react-native";
 
 import { icons } from "../../constants";
-import useAppwrite from "../../lib/useAppwrite";
-import { getUserPosts } from "../../lib/appwrite";
+
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { EmptyState, ImageCard, InfoBox, VideoCard } from "../../components";
+import { EmptyState, ImageCard, InfoBox } from "../../components";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const { posts, setPosts } = useState(getAllPosts);
+  const [ posts, setPosts ] = useState([]);
 
   const logout = async () => {
     setUser(null);
@@ -22,19 +22,21 @@ const Profile = () => {
   async function getUserPosts() {
     setRefreshing(true);
     try {
-      const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}//posts/user`,
-        {
-          user_id: user.id,
-        }
-      );
-      setPosts(response.data);
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/user?user_id=${user.id}`;
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseData = await response.json();
+      setPosts(responseData);
     } catch (error) {
+      console.error(error);
       Alert.alert("Error", error.message);
     } finally {
       setRefreshing(false);
     }
   }
+  
 
   useEffect(() => {
     getUserPosts();
@@ -88,7 +90,7 @@ const Profile = () => {
 
             <View className="mt-5 flex flex-row">
               <InfoBox
-                title={posts.length || 0}
+                title={posts?.length || 0}
                 subtitle="Posts"
                 titleStyles="text-xl"
                 containerStyles="mr-10"

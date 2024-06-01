@@ -6,7 +6,6 @@ import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 import { images } from "../../constants";
 import { CustomButton, FormField } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import axios from "axios";
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -19,20 +18,38 @@ const SignIn = () => {
   async function submit() {
     if (!form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
+      return;
     }
     setSubmitting(true);
+  
+    const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/login`;
+  
+    const requestData = {
+      email: form.email,
+      password: form.password,
+    };
+  
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
+    };
+  
     try {
-      const response = await axios.post(
-        `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
-        { email, password }
-      );
-
-      setUser(response.data.user);
+      const response = await fetch(apiUrl, requestOptions);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseData = await response.json();
+      console.log("Response:", responseData);
+      setUser(responseData.user);
       setIsLogged(true);
-
       Alert.alert("Success", "User signed in successfully");
       router.replace("/home");
     } catch (error) {
+      console.error(error);
       Alert.alert("Error", error.message);
     } finally {
       setSubmitting(false);

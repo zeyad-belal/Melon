@@ -26,14 +26,14 @@ const Create = () => {
 
   const openPicker = async (selectType) => {
     const result = await DocumentPicker.getDocumentAsync({
-      type: ["image/png", "image/jpg"],
+      type: ["image/png", "image/jpg","image/jpeg"],
     });
-
     if (!result.canceled) {
+      console.log(selectType)
       if (selectType === "image") {
         setForm({
           ...form,
-          thumbnail: result.assets[0],
+          image: result.assets[0],
         });
       }
     } else {
@@ -44,35 +44,47 @@ const Create = () => {
   };
 
   const submit = async () => {
-    if (!form.keywords.length | !form.description | !form.image) {
+    if (!form.keywords.length || !form.description || !form.image) {
       return Alert.alert("Please provide all fields");
     }
-
+  
     setUploading(true);
     try {
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
+  
       const formData = new FormData();
       formData.append("keywords", form.keywords);
       formData.append("description", form.description);
       formData.append("image", form.image);
-
-      await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/posts`, formData, {
-        headers: { Authorization: `${cookies.UserToken}` },
-      });
-
+  
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          Authorization: `${cookies.UserToken}`,
+        },
+        body: formData,
+      };
+  
+      const response = await fetch(apiUrl, requestOptions);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
       Alert.alert("Success", "Post uploaded successfully");
       router.push("/home");
     } catch (error) {
+      console.error(error);
       Alert.alert("Error", error.message);
     } finally {
       setForm({
         image: null,
         description: "",
       });
-
       setUploading(false);
     }
   };
-
+  
+console.log('form.image',form.image)
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView className="px-4 my-6">
