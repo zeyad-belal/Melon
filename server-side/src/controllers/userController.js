@@ -6,30 +6,19 @@ const imageKit = require("../utils/imageKit");
 
 // registration
 const signUp = async (req, res, next) => {
-  console.log('req recieved !')
   const { name, email, password } = req.body;
-  console.log(name, email, password )
   if (!email || !password)
     return next(new AppError("email and password required", 401));
   
   try {
-    console.log('user entity,', User)
-    console.log('User.create(,', User.create({
-      name,
-      email,
-      password
-    }))
     const newUser = await User.create({
       name,
       email,
       password
     });
     newUser.password = undefined;
-    
-    console.log('created newUser',newUser)
     const user = await User.findOne({ email });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    console.log('user AND TOKEN',user, token)
 
     res.send({ message: "user created successfully", newUser, token });
   } catch (error) {

@@ -24,31 +24,36 @@ const SignUp = () => {
       return;
     }
     setSubmitting(true);
-
+  
     const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/signup`;
-
+  
+    const requestData = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    };
+  
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      }),
+      body: JSON.stringify(requestData),
     };
-
+  
     try {
-      const response = await fetch(apiUrl, requestOptions);``
-      console.log("responssssssssssse", response);
-      console.log("response.data.newUser", response.data.newUser);
-      setUser(response.data.newUser);
+      const response = await fetch(apiUrl, requestOptions);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseData = await response.json();
+      console.log("Response:", responseData);
+      setUser(responseData.newUser);
       setIsLogged(true);
       router.replace("/home");
     } catch (error) {
-      console.log(error);
-      Alert.alert("Error", error);
+      console.error(error);
+      Alert.alert("Error", error.message);
     } finally {
       setSubmitting(false);
     }
