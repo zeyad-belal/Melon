@@ -9,22 +9,23 @@ const Search = () => {
   const { query } = useLocalSearchParams();
   const [ posts, setPosts ] = useState([]);
 
-  async function getSearchPosts() {
+  const getSearchPosts = async () => {
     setRefreshing(true);
     try {
-      const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}//posts/search`,
-        {
-          user_id: user.id,
-        }
-      );
-      setPosts(response.data);
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/search?user_id=${user.id}`;
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const responseData = await response.json();
+      setPosts(responseData);
     } catch (error) {
+      console.error(error);
       Alert.alert("Error", error.message);
     } finally {
       setRefreshing(false);
     }
-  }
+  };
 
   useEffect(() => {
     getSearchPosts();
