@@ -25,7 +25,7 @@ const SignUp = () => {
     }
     setSubmitting(true);
 
-    const apiUrl = `http://localhost:8000/users/signup`;
+    const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/signup`;
 
     const requestOptions = {
       method: "POST",

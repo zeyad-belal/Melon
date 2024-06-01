@@ -13,6 +13,12 @@ const signUp = async (req, res, next) => {
     return next(new AppError("email and password required", 401));
   
   try {
+    console.log('user entity,', User)
+    console.log('User.create(,', User.create({
+      name,
+      email,
+      password
+    }))
     const newUser = await User.create({
       name,
       email,
