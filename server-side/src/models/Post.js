@@ -12,7 +12,7 @@ const postSchema = new Schema({
   keywords:{
     type : Array
   },
-  images: {
+  image: {
     type: Object 
   },
   user_id: {
