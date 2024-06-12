@@ -50,7 +50,7 @@ const Create = () => {
   
     setUploading(true);
     try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/create`;
   
       const formData = new FormData();
       formData.append("keywords", form.keywords);
@@ -59,14 +59,12 @@ const Create = () => {
   
       const requestOptions = {
         method: "POST",
-        headers: {
-          Authorization: `${cookies.UserToken}`,
-        },
         body: formData,
       };
   
       const response = await fetch(apiUrl, requestOptions);
       if (!response.ok) {
+        console.log(response)
         throw new Error('Network response was not ok');
       }
   
@@ -147,7 +145,7 @@ console.log('form.image',form.image)
 
         <FormField
           title="Keywords"
-          value={form.description}
+          value={form.keywords}
           placeholder="The search keywords of your image...."
           handleChangeText={(e) => setForm({ ...form, keywords: e })}
           otherStyles="mt-7"

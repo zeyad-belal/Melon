@@ -18,7 +18,7 @@ const {
 } = require("../utils/validations/postValidation");
 
 // create a post 
-router.post("/", upload.single("image"), postCreationValidation, createPost);
+router.post("/create", upload.single("image"), postCreationValidation, createPost);
 
 
 // get all posts

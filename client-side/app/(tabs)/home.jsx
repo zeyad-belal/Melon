@@ -49,6 +49,7 @@ const Home = () => {
   return (
     <SafeAreaView className="bg-primary">
       <FlatList
+      className='h-full'
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
