@@ -4,8 +4,10 @@ import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EmptyState, ImageCard, SearchInput } from "../../components";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Search = () => {
+  const { user } = useGlobalContext();
   const { query } = useLocalSearchParams();
   const [ posts, setPosts ] = useState([]);
 
@@ -30,12 +32,13 @@ const Search = () => {
   useEffect(() => {
     getSearchPosts();
   }, [query]);
-
+// console.log('posts',posts)
+// console.log('user',user)
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.$id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ImageCard
             description={item.description}
@@ -55,15 +58,15 @@ const Search = () => {
               </Text>
 
               <View className="mt-6 mb-8">
-                <SearchInput initialQuery={query} refetch={refetch} />
+                <SearchInput initialQuery={query}  />
               </View>
             </View>
           </>
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Videos Found"
-            subtitle="No videos found for this search query"
+            title="No Posts Found"
+            subtitle="No posts found for this search query"
           />
         )}
       />

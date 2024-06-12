@@ -25,8 +25,11 @@ const Profile = () => {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/user?user_id=${user.id}`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
+        console.log('response from profile',response)
         throw new Error('Network response was not ok');
-      }
+        }
+      console.log('response from profile')
+      console.log('response from profile',response)
       const responseData = await response.json();
       setPosts(responseData);
     } catch (error) {
@@ -40,13 +43,14 @@ const Profile = () => {
 
   useEffect(() => {
     getUserPosts();
-  }, []);
+  }, [user.id]);
+  console.log('posts from profile',posts)
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-primary h-[107%]">
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.$id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ImageCard
             description={item.description}
@@ -57,8 +61,8 @@ const Profile = () => {
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Videos Found"
-            subtitle="No videos found for this profile"
+            title="No Posts Found"
+            subtitle="No posts found for this profile"
           />
         )}
         ListHeaderComponent={() => (
@@ -96,7 +100,7 @@ const Profile = () => {
                 containerStyles="mr-10"
               />
               <InfoBox
-                title="1.2k"
+                title="0"
                 subtitle="Followers"
                 titleStyles="text-xl"
               />

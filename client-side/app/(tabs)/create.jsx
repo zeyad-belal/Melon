@@ -56,6 +56,7 @@ const Create = () => {
       formData.append("keywords", form.keywords);
       formData.append("description", form.description);
       formData.append("image", form.image);
+      formData.append("user_id", user._id);
   
       const requestOptions = {
         method: "POST",
@@ -82,9 +83,9 @@ const Create = () => {
     }
   };
   
-console.log('form.image',form.image)
+
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-primary h-[107%]">
       <ScrollView className="px-4 my-6">
         <Text className="text-2xl text-white font-psemibold">Upload Image</Text>
 
@@ -115,33 +116,17 @@ console.log('form.image',form.image)
           </TouchableOpacity>
         </View>
 
-        <View className="mt-7 space-y-2">
-          <Text className="text-base text-gray-100 font-pmedium">
-            Post Image
-          </Text>
-
-          <TouchableOpacity onPress={() => openPicker("image")}>
             {form.image ? (
+        <View className="mt-7 space-y-2">
+          <TouchableOpacity onPress={() => openPicker("image")}>
               <Image
-                source={{ uri: form.image }}
+                source={{ uri: form.image.uri }}
                 resizeMode="cover"
                 className="w-full h-64 rounded-2xl"
               />
-            ) : (
-              <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 flex justify-center items-center flex-row space-x-2">
-                <Image
-                  source={icons.upload}
-                  resizeMode="contain"
-                  alt="upload"
-                  className="w-5 h-5"
-                />
-                <Text className="text-sm text-gray-100 font-pmedium">
-                  Choose a file
-                </Text>
-              </View>
-            )}
           </TouchableOpacity>
         </View>
+            ) : null}
 
         <FormField
           title="Keywords"
