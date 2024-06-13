@@ -60,17 +60,17 @@ const getPost = async (req, res, next) => {
 const getPostsByUserId = async (req, res, next) => {
   try {
     // check if user_id is provided
-    if (!req.query.user_id) {
+    if (!req.params.user_id) {
       return next(new AppError("User ID is required.", 400));
     }
 
     // check if user_id is a valid objectId
-    if (!Types.ObjectId.isValid(req.query.user_id)) {
+    if (!Types.ObjectId.isValid(req.params.user_id)) {
       return next(new AppError("Invalid User ID.", 400));
     }
 
     // find posts by user_id
-    const posts = await Post.find({ user_id: req.query.user_id }).populate("user_id");
+    const posts = await Post.find({ user_id: req.params.user_id }).populate("user_id");
 
     if (!posts || posts.length === 0) {
       return next(new AppError("No posts found for the given user ID.", 404));
