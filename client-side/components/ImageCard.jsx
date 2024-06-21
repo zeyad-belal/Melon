@@ -1,9 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import { icons } from "../constants";
+import { useGlobalContext } from "../context/GlobalProvider";
 
-const ImageCard = ({ description, creator, avatar, image }) => {
+const ImageCard = ({ id, description, creator, avatar, image }) => {
+  const { user } = useGlobalContext();
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    user.saved_items?.map((item) => {
+      item.id == id ? setSaved(true) : null;
+    });
+  }, [user]);
+
   return (
     <View className="flex flex-col items-center px-4 mb-14">
       <View className="flex flex-row gap-3 items-start">
@@ -33,7 +43,19 @@ const ImageCard = ({ description, creator, avatar, image }) => {
         </View>
 
         <View className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+          {saved ? (
+            <Image
+              source={icons.saved}
+              className="w-6 h-6"
+              resizeMode="contain"
+            />
+          ) : (
+            <Image
+              source={icons.save}
+              className="w-6 h-6"
+              resizeMode="contain"
+            />
+          )}
         </View>
       </View>
 

@@ -13,7 +13,7 @@ const Welcome = () => {
   if (!loading && isLogged) return <Redirect href="/home" />;
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-[#000] h-full">
       <Loader isLoading={loading} />
 
       <ScrollView
@@ -24,20 +24,20 @@ const Welcome = () => {
         <View className="w-full flex justify-center items-center h-full px-4">
           <Image
             source={images.logoAndName}
-            className="w-[130px] h-[84px]" 
+            className="w-[190px] h-[94px]" 
             resizeMode="contain"
           />
 
-          <Image
+          {/* <Image
             source={images.mainLogo}
             className="max-w-[380px] w-full h-[298px]"
             resizeMode="contain"
-          />
+          /> */}
 
           <View className="relative mt-5">
-            <Text className="text-3xl text-white font-bold text-center">
-              Discover Endless{"\n"}
-              Possibilities with{" "}
+          <Text className="text-3xl text-white font-bold text-center">
+              Unleash Your Voice{"\n"}
+              With{" "}
               <Text className="text-secondary-200">Melon</Text>
             </Text>
 
@@ -45,7 +45,7 @@ const Welcome = () => {
           </View>
 
           <Text className="text-sm font-pregular text-gray-100 mt-7 text-center">
-            Where Creativity Meets Innovation: Embark on a Journey of Limitless
+            Embark on a Journey of Limitless
             Exploration with Melon
           </Text>
 

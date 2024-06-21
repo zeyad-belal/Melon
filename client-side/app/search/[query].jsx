@@ -9,7 +9,7 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 const Search = () => {
   const { user } = useGlobalContext();
   const { query } = useLocalSearchParams();
-  const [ posts, setPosts ] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   const getSearchPosts = async () => {
     setRefreshing(true);
@@ -19,6 +19,8 @@ const Search = () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      console.log("response from search", response);
+
       const responseData = await response.json();
       setPosts(responseData);
     } catch (error) {
@@ -32,15 +34,17 @@ const Search = () => {
   useEffect(() => {
     getSearchPosts();
   }, [query]);
-// console.log('posts',posts)
-// console.log('user',user)
+  console.log("posts from search", posts);
+  // console.log('user',user)
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-[#000] h-full">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ImageCard
+            key={item.id}
+            id={item.id}
             description={item.description}
             image={item.image}
             creator={item.user_id.name}
@@ -58,7 +62,7 @@ const Search = () => {
               </Text>
 
               <View className="mt-6 mb-8">
-                <SearchInput initialQuery={query}  />
+                <SearchInput initialQuery={query} />
               </View>
             </View>
           </>

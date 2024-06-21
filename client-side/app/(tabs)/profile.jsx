@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const [ posts, setPosts ] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   const logout = async () => {
     setUser(null);
@@ -20,39 +20,42 @@ const Profile = () => {
   };
 
   async function getUserPosts() {
-    setRefreshing(true);
+
     try {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/user?user_id=${user.id}`;
-      const response = await fetch(apiUrl);
+      const response = await fetch(apiUrl, {
+        method: "GET",
+      });
+
+      console.log("response from profile", response);
+
       if (!response.ok) {
-        console.log('response from profile',response)
-        throw new Error('Network response was not ok');
-        }
-      console.log('response from profile')
-      console.log('response from profile',response)
+        console.log("response from profile", response);
+        throw new Error("Network response was not ok");
+      }
+
       const responseData = await response.json();
       setPosts(responseData);
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message);
-    } finally {
-      setRefreshing(false);
     }
   }
-  
 
   useEffect(() => {
     getUserPosts();
   }, [user.id]);
-  console.log('posts from profile',posts)
+  console.log("posts from profile", posts);
 
   return (
-    <SafeAreaView className="bg-primary h-[107%]">
+    <SafeAreaView className="bg-[#000] h-[107%]">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ImageCard
+            key={item.id}
+            id={item.id}
             description={item.description}
             image={item.image}
             creator={item.user_id.name}
@@ -99,11 +102,7 @@ const Profile = () => {
                 titleStyles="text-xl"
                 containerStyles="mr-10"
               />
-              <InfoBox
-                title="0"
-                subtitle="Followers"
-                titleStyles="text-xl"
-              />
+              <InfoBox title="0" subtitle="Followers" titleStyles="text-xl" />
             </View>
           </View>
         )}

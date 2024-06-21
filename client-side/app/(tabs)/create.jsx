@@ -85,7 +85,7 @@ const Create = () => {
   
 
   return (
-    <SafeAreaView className="bg-primary h-[107%]">
+    <SafeAreaView className="bg-[#000] h-[107%]">
       <ScrollView className="px-4 my-6">
         <Text className="text-2xl text-white font-psemibold">Upload Image</Text>
 

@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Alert, FlatList, Image, RefreshControl, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Image,
+  RefreshControl,
+  Text,
+  View,
+} from "react-native";
 
 import { images } from "../../constants";
 import { EmptyState, SearchInput, Trending, ImageCard } from "../../components";
 
 const Home = () => {
-  const [ posts, setPosts ] = useState([]);
+  const [posts, setPosts] = useState([]);
   const latestPosts = posts?.slice(0, 5);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -23,7 +30,7 @@ const Home = () => {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const responseData = await response.json();
       setPosts(responseData);
@@ -34,7 +41,6 @@ const Home = () => {
       setRefreshing(false);
     }
   }
-  
 
   useEffect(() => {
     getPosts();
@@ -45,14 +51,17 @@ const Home = () => {
   // and horizontal flatlist
 
   //  we cannot do that with just scrollview as there's both horizontal and vertical scroll (two flat lists, within trending)
+  console.log(posts);
   return (
-    <SafeAreaView className="bg-primary h-[104%]">
+    <SafeAreaView className="bg-[#000] h-[104%]">
       <FlatList
-      className='h-full'
+        className="h-full"
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ImageCard
+            key={item.id}
+            id={item.id}
             description={item.description}
             image={item.image}
             creator={item.user_id.name}

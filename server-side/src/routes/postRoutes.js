@@ -25,7 +25,7 @@ router.post("/create", upload.single("image"), postCreationValidation, createPos
 router.get("/", getAllPosts);
 
 // get user posts
-router.get('/posts/user', getPostsByUserId);
+router.get('/posts/user/:user_id', getPostsByUserId);
 
 // get a post by post id
 router.get("/:id", getPost);
