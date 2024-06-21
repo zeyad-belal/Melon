@@ -21,14 +21,14 @@ const SignIn = () => {
       return;
     }
     setSubmitting(true);
-  
+
     const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/login`;
-  
+
     const requestData = {
       email: form.email,
       password: form.password,
     };
-  
+
     const requestOptions = {
       method: "POST",
       headers: {
@@ -36,15 +36,15 @@ const SignIn = () => {
       },
       body: JSON.stringify(requestData),
     };
-  
+
     try {
       const response = await fetch(apiUrl, requestOptions);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const responseData = await response.json();
       console.log("Response:", responseData);
-      setUser(responseData.user);
+      setUser({ ...responseData.user, token: responseData.token });
       setIsLogged(true);
       Alert.alert("Success", "User signed in successfully");
       router.replace("/home");

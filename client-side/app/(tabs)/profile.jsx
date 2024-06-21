@@ -25,6 +25,9 @@ const Profile = () => {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/user?user_id=${user.id}`;
       const response = await fetch(apiUrl, {
         method: "GET",
+        headers: {
+          'Authorization':user.token, 
+        },
       });
 
       console.log("response from profile", response);
