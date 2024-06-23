@@ -34,32 +34,6 @@ app.use("/posts", postRoutes);
 
 
 
-
-io.on('connection', (socket) => {
-  socket.on('send-message', (message, room) => {
-    if (room !== '') { 
-      // Join the specified room
-      socket.join(room);
-      socket.to(room).emit('receive-message', message); 
-    }
-  });
-
-  socket.on('send-noti', (message, room) => {
-    if (room !== '') { 
-      // Join the specified room
-      socket.join(room);
-      socket.to(room).emit('receive-noti', message); 
-    }
-  });
-
-  socket.on('join-room', (room) => {
-    socket.join(room);
-    console.log(`User ${socket.id} joined room ${room}`);
-  });
-});
-
-
-
 // Global Error Handler
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
