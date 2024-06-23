@@ -22,8 +22,6 @@ const verfiyUserToken = require("../middlewares/verfiyUserToken");
 router.post("/create", upload.single("image"), postCreationValidation, createPost);
 
 
-// get all posts
-router.get("/", getAllPosts);
 
 // get user posts
 router.get('/user/:user_id',verfiyUserToken, getPostsByUserId);
@@ -36,5 +34,8 @@ router.get("/search", searchPostsByKeyword);
 
 // delete a post
 router.delete("/:id", deletePost);
+
+// get all posts
+router.get("/", getAllPosts);
 
 module.exports = router;
