@@ -58,6 +58,7 @@ const getPost = async (req, res, next) => {
 };
 
 const getPostsByUserId = async (req, res, next) => {
+  console.log(`req recivedddddvvvvvvvvvvv`, req.params.user_id)
   try {
     // check if user_id is provided
     if (!req.params.user_id) {
