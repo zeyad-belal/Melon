@@ -16,7 +16,6 @@ const {
 const {
   postCreationValidation,
 } = require("../utils/validations/postValidation");
-const verfiyUserToken = require("../middlewares/verfiyUserToken");
 
 // create a post 
 router.post("/create", upload.single("image"), postCreationValidation, createPost);
@@ -24,7 +23,7 @@ router.post("/create", upload.single("image"), postCreationValidation, createPos
 
 
 // get user posts
-router.get('/user/:user_id',verfiyUserToken, getPostsByUserId);
+router.get('/user/:user_id', getPostsByUserId);
 
 // get a post by post id
 router.get("/:id", getPost);
