@@ -36,9 +36,6 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
-  bio: {
-    type: String,
-  },
 });
 
 //hashing password in  mongoose middleware before saving user in db(document middleware)

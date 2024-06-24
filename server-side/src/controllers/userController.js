@@ -80,7 +80,7 @@ const updateUser = async (req, res, next) => {
   const { id } = req.params.id;
   const { name, email } = req.body;
   let { avatar, avatarID,saved_items } = req.body;
-
+console.log('saved_items',saved_items)
   // handle new image uploud
   if (req.file) {
     if (avatarID) {
