@@ -12,7 +12,7 @@ const Bookmark = () => {
 
 
 
-  async function getUserPosts() {
+  async function getPosts() {
 
     try {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/user/${user.id}`;
@@ -24,8 +24,10 @@ const Bookmark = () => {
       });
 
       if (!response.ok) {
-        console.log("response from profile", response);
-        throw new Error("Network response was not ok");
+        console.log("response from bookmarked", response);
+        return
+
+        // throw new Error("Network response was not ok");
       }
 
       const responseData = await response.json();
@@ -38,7 +40,7 @@ const Bookmark = () => {
 
 
   useEffect(() => {
-    getUserPosts();
+    getPosts();
   }, [user.id]);
   return (
     <SafeAreaView className="px-4 py-6 bg-[#000] h-full">

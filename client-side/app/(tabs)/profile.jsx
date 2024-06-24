@@ -32,7 +32,8 @@ const Profile = () => {
 
       if (!response.ok) {
         console.log("response from profile", response);
-        throw new Error("Network response was not ok");
+        return
+        // throw new Error("Network response was not ok");
       }
 
       const responseData = await response.json();
