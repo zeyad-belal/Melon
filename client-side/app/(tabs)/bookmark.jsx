@@ -3,7 +3,7 @@ import { View, Image, FlatList, TouchableOpacity } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { EmptyState } from "../../components";
+import { EmptyState, ImageCard } from "../../components";
 
 const Bookmark = () => {
   console.log('user')
