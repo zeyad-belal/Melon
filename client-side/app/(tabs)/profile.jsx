@@ -30,8 +30,6 @@ const Profile = () => {
         },
       });
 
-      console.log("response from profile", response);
-
       if (!response.ok) {
         console.log("response from profile", response);
         throw new Error("Network response was not ok");
@@ -48,7 +46,6 @@ const Profile = () => {
   useEffect(() => {
     getUserPosts();
   }, [user.id]);
-  console.log("posts from profile", posts);
 
   return (
     <SafeAreaView className="bg-[#000] h-[107%]">
