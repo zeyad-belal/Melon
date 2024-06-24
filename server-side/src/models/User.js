@@ -28,8 +28,10 @@ const userSchema = new Schema({
   },
   saved_items: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Post",
+      post: {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
     },
   ],
   created_at: {
