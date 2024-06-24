@@ -123,7 +123,7 @@ const updateUser = async (req, res, next) => {
 
   const user = await User.findByIdAndUpdate(
     id,
-    { name, email, avatar, avatarID, saved_items, bio },
+    { name, email, avatar, avatarID, saved_items },
     { new: true }
   );
 
