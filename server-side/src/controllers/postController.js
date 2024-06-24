@@ -28,7 +28,7 @@ const createPost = async (req, res, next) => {
   const createdPost = await Post.create({
     name: req.body.name,
     description: req.body.description,
-    keywords: req.body.keywords.split(","),
+    keywords: req.body.keywords.split(" "),
     image: imageInfo,
     user_id: user._id
   });
