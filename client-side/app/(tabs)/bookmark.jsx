@@ -6,9 +6,9 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import { EmptyState, ImageCard } from "../../components";
 
 const Bookmark = () => {
-  console.log('user')
+  console.log("user");
   const { user } = useGlobalContext();
-  console.log('user',user)
+  console.log("user", user);
   return (
     <SafeAreaView className="px-4 py-6 bg-[#000] h-full">
       <Text className="text-2xl text-white font-psemibold">Bookmark</Text>
@@ -31,11 +31,9 @@ const Bookmark = () => {
             subtitle="No Posts Were Bookmarked Yet"
           />
         )}
-
       />
-   
     </SafeAreaView>
   );
 };
- 
+
 export default Bookmark;

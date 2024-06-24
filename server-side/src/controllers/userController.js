@@ -63,13 +63,7 @@ const getAllUsers = async (req, res) => {
 //get user by id
 const getUserById = async (req, res, next) => {
   const { id } = req.params;
-  const user = await User.findById(id).populate({
-    path: "saved_items.post",
-    populate: {
-      path: "user_id",
-      model: "User",
-    },
-  });
+  const user = await User.findById(id).populate("saved_items.post");
 
   if (!user) return next(new AppError("user not found", 404));
   res.send({ user });
@@ -80,7 +74,7 @@ const updateUser = async (req, res, next) => {
   const { id } = req.params;
   const { name, email } = req.body;
   let { avatar, avatarID,saved_items } = req.body;
-console.log('saved_items',saved_items)
+
   // handle new image uploud
   if (req.file) {
     if (avatarID) {

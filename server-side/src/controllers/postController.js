@@ -7,7 +7,6 @@ const imageKit = require("../utils/imageKit");
 const User = require("../models/User");
 
 const createPost = async (req, res, next) => {
-  console.log('req recieved')
   if (!req.file) {
     return next(new AppError("Upload at least one image of the Post", 404));
   }
