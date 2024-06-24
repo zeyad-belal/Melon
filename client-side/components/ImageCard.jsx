@@ -9,10 +9,8 @@ const ImageCard = ({ id, description, creator, avatar, image }) => {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    user.saved_items?.map((item) => {
-      item.id == id ? setSaved(true) : null;
-    });
-  }, [user]);
+      user.saved_items.includes(id) ? setSaved(true) : null;
+  }, [user,user.saved_items]);
 
 
   async function bookmarkPost(){
@@ -22,7 +20,7 @@ const ImageCard = ({ id, description, creator, avatar, image }) => {
         method: "PATCH",
         headers: {
           'Authorization': user.token,
-          'Content-Type': 'application/json'  // Set content type to JSON
+          'Content-Type': 'application/json'  
         },
         body: JSON.stringify({
           saved_items: [...user.saved_items, id]
@@ -44,24 +42,26 @@ const ImageCard = ({ id, description, creator, avatar, image }) => {
   
 
   async function unBookmarkPost(){
-
     try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/user/${user.id}`;
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/${user.id}`;
       const response = await fetch(apiUrl, {
         method: "PATCH",
         headers: {
-          'Authorization':user.token, 
+          'Authorization': user.token,
+          'Content-Type': 'application/json'  
         },
-        body:{
+        body: JSON.stringify({
           saved_items: user.saved_items.filter((item)=> item.id !== id)
-        }
+        })
       });
-
+  
+      console.log(response, 'bbb');
+  
       if (!response.ok) {
-        console.log("unbookmark post response", response);
+        console.log("bookmark post response", response);
         throw new Error("Network response was not ok");
       }
-
+  
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message);

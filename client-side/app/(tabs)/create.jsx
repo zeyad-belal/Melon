@@ -103,7 +103,7 @@ const Create = () => {
           </Text>
 
           <TouchableOpacity onPress={() => openPicker("image")}>
-            <View className="w-full h-40 px-4 bg-black-100 rounded-2xl border border-black-200 flex justify-center items-center">
+            <View className="w-full h-40 px-4 bg-black rounded-2xl border border-[#252525] flex justify-center items-center">
               <View className="w-14 h-14 border border-dashed border-secondary-100 flex justify-center items-center">
                 <Image
                   source={icons.upload}
