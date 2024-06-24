@@ -77,7 +77,7 @@ const getUserById = async (req, res, next) => {
 
 // update user info
 const updateUser = async (req, res, next) => {
-  const { id } = req.params.id;
+  const { id } = req.params;
   const { name, email } = req.body;
   let { avatar, avatarID,saved_items } = req.body;
 console.log('saved_items',saved_items)
