@@ -72,52 +72,13 @@ const getUserById = async (req, res, next) => {
 // update user info
 const updateUser = async (req, res, next) => {
   const { id } = req.params;
-  const { name, email } = req.body;
-  let { avatar, avatarID,saved_items } = req.body;
+  let { saved_items } = req.body;
 
-  // handle new image uploud
-  if (req.file) {
-    if (avatarID) {
-      try {
-        await imageKit.bulkDeleteFiles([avatarID]);
-      } catch (error) {
-        return next(
-          new AppError(
-            "There was an error in deleting user image from ImageKit.",
-            404
-          )
-        );
-      }
-    }
-    const image = req.file;
-    const res = await imageKit.upload({
-      file: image.buffer.toString("base64"),
-      fileName: image.originalname,
-      folder: "connect-users",
-    });
-    avatarID = res.fileId;
-    avatar = res.url;
-  }
 
-  // handle deleltion of avatar
-  if (!avatar && !req.file && avatarID) {
-    avatar =
-      "https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg?size=626&ext=jpg&ga=GA1.1.1326869177.1680443547&semt=sph";
-    try {
-      await imageKit.bulkDeleteFiles([avatarID]);
-    } catch (error) {
-      return next(
-        new AppError(
-          "There was an error in deleting user image from ImageKit.",
-          404
-        )
-      );
-    }
-  }
 
   const user = await User.findByIdAndUpdate(
     id,
-    { name, email, avatar, avatarID, saved_items },
+    { saved_items },
     { new: true }
   );
 
