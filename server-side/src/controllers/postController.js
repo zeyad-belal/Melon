@@ -84,7 +84,7 @@ const getPostsByUserId = async (req, res, next) => {
 const searchPostsByKeyword = async (req, res, next) => {
   try {
     // Check if search string is provided
-    const searchString = req.query.keyword; // Use req.query to get keyword from query params
+    const searchString = req.params.keyword; // Use req.query to get keyword from query params
     if (!searchString) {
       return next(new AppError("Keyword is required.", 400));
     }

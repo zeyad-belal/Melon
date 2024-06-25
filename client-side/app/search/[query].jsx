@@ -13,7 +13,7 @@ const Search = () => {
 
   const getSearchPosts = async () => {
     try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/search?keyword=${query}`;
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/search/${query}`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error("Network response was not ok");
