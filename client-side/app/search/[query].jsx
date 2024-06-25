@@ -71,6 +71,7 @@ const Search = () => {
             creator={item.user_id.name}
             avatar={item.user_id.avatar}
             getPosts={getPosts}
+            keywords={item.keywords}
           />
         )}
         ListHeaderComponent={() => (

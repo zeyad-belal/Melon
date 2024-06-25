@@ -85,6 +85,7 @@ const Bookmark = () => {
             image={item.image}
             creator={item.user_id.name}
             avatar={item.user_id.avatar}
+            keywords={item.keywords}
             getPosts={getPosts}
           />
         )}
@@ -94,6 +95,7 @@ const Bookmark = () => {
             subtitle="No Posts Were Bookmarked Yet"
           />
         )}
+        className='mt-12'
       />
     </SafeAreaView>
   );

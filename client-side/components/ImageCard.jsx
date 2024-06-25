@@ -4,7 +4,15 @@ import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
 import { icons } from "../constants";
 import { useGlobalContext } from "../context/GlobalProvider";
 
-const ImageCard = ({ id, description, creator, avatar, image, getPosts }) => {
+const ImageCard = ({
+  id,
+  description,
+  creator,
+  avatar,
+  image,
+  getPosts,
+  keywords,
+}) => {
   const { user } = useGlobalContext();
   const [saved, setSaved] = useState(false);
 
@@ -14,14 +22,15 @@ const ImageCard = ({ id, description, creator, avatar, image, getPosts }) => {
 
   const bookmarkPost = async () => {
     if (!user.id) return;
+    const previousSavedState = saved;
     setSaved(true);
     try {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/${user.id}`;
       const response = await fetch(apiUrl, {
         method: "PATCH",
         headers: {
-          'Authorization': user.token,
-          'Content-Type': 'application/json',
+          Authorization: user.token,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           saved_items: [...user.saved_items, id],
@@ -32,7 +41,7 @@ const ImageCard = ({ id, description, creator, avatar, image, getPosts }) => {
         throw new Error("Network response was not ok");
       }
     } catch (error) {
-      setSaved(false);
+      setSaved(previousSavedState);
       console.error(error);
       Alert.alert("Error", error.message);
     } finally {
@@ -42,14 +51,15 @@ const ImageCard = ({ id, description, creator, avatar, image, getPosts }) => {
 
   const unBookmarkPost = async () => {
     if (!user.id) return;
+    const previousSavedState = saved;
     setSaved(false);
     try {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/${user.id}`;
       const response = await fetch(apiUrl, {
         method: "PATCH",
         headers: {
-          'Authorization': user.token,
-          'Content-Type': 'application/json',
+          Authorization: user.token,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           saved_items: user.saved_items?.filter((item) => item !== id),
@@ -60,7 +70,7 @@ const ImageCard = ({ id, description, creator, avatar, image, getPosts }) => {
         throw new Error("Network response was not ok");
       }
     } catch (error) {
-      setSaved(true);
+      setSaved(previousSavedState);
       console.error(error);
       Alert.alert("Error", error.message);
     } finally {
@@ -136,6 +146,15 @@ const ImageCard = ({ id, description, creator, avatar, image, getPosts }) => {
           resizeMode="cover"
         />
       </TouchableOpacity>
+
+      <View className="flex flex-row flex-wrap gap-2 mt-3 px-4 justify-start w-full">
+      {/* <Text className="font-psemibold text-xs text-white">tags:</Text> */}
+        {keywords?.map((key, index) => (
+          <View key={index} className="bg-red-500 rounded-full px-2 py-1 m-1">
+            <Text className="font-psemibold text-xs text-white">{key}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 };
