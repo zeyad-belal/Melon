@@ -43,7 +43,31 @@ const Profile = () => {
       Alert.alert("Error", error.message);
     }
   }
+  // bad approach need to be fixed 
+  async function getPosts() {
+    try {
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          Authorization: user.token,
+        },
+      });
 
+      if (!response.ok) {
+        console.log("response from bookmarked", response);
+        return;
+
+        // throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+      setPosts(responseData);
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", error.message);
+    }
+  }
   useEffect(() => {
     getUserPosts();
   }, [user.id]);
@@ -61,6 +85,7 @@ const Profile = () => {
             image={item.image}
             creator={item.user_id.name}
             avatar={item.user_id.avatar}
+            getPosts={getPosts}
           />
         )}
         ListEmptyComponent={() => (

@@ -28,7 +28,7 @@ router.post("/login", loginValidation, login);
 router.get("/", verfiyUserToken, getAllUsers);
 
 //get user by id
-router.get("/:id", verfiyUserToken, getUserById);
+router.get("/:id", getUserById);
 
 
 // update user

@@ -1,73 +1,72 @@
 import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
 
 import { icons } from "../constants";
 import { useGlobalContext } from "../context/GlobalProvider";
 
-const ImageCard = ({ id, description, creator, avatar, image }) => {
+const ImageCard = ({ id, description, creator, avatar, image, getPosts }) => {
   const { user } = useGlobalContext();
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-      user.saved_items.includes(id) ? setSaved(true) : null;
-  }, [user,user.saved_items]);
+    setSaved(user.saved_items?.includes(id));
+  }, [user, user.saved_items]);
 
-
-  async function bookmarkPost(){
+  const bookmarkPost = async () => {
+    if (!user.id) return;
+    setSaved(true);
     try {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/${user.id}`;
       const response = await fetch(apiUrl, {
         method: "PATCH",
         headers: {
           'Authorization': user.token,
-          'Content-Type': 'application/json'  
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          saved_items: [...user.saved_items, id]
-        })
+          saved_items: [...user.saved_items, id],
+        }),
       });
-  
-      console.log(response, 'zzzzzz');
-  
+
       if (!response.ok) {
-        console.log("bookmark post response", response);
         throw new Error("Network response was not ok");
       }
-  
     } catch (error) {
+      setSaved(false);
       console.error(error);
       Alert.alert("Error", error.message);
+    } finally {
+      getPosts();
     }
-  }
-  
+  };
 
-  async function unBookmarkPost(){
+  const unBookmarkPost = async () => {
+    if (!user.id) return;
+    setSaved(false);
     try {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/${user.id}`;
       const response = await fetch(apiUrl, {
         method: "PATCH",
         headers: {
           'Authorization': user.token,
-          'Content-Type': 'application/json'  
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          saved_items: user.saved_items.filter((item)=> item.id !== id)
-        })
+          saved_items: user.saved_items?.filter((item) => item !== id),
+        }),
       });
-  
-      console.log(response, 'bbb');
-  
+
       if (!response.ok) {
-        console.log("bookmark post response", response);
         throw new Error("Network response was not ok");
       }
-  
     } catch (error) {
+      setSaved(true);
       console.error(error);
       Alert.alert("Error", error.message);
+    } finally {
+      getPosts();
     }
-  }
-
+  };
 
   return (
     <View className="flex flex-col items-center px-4 mb-14" key={id}>
@@ -100,28 +99,28 @@ const ImageCard = ({ id, description, creator, avatar, image }) => {
         <View className="pt-2">
           {saved ? (
             <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={unBookmarkPost}
-            className="w-full h-6 rounded-xl relative flex justify-center items-center"
-          >
-            <Image
-              source={icons.saved}
-              className="w-6 h-6"
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+              activeOpacity={0.7}
+              onPress={unBookmarkPost}
+              className="w-full h-6 rounded-xl relative flex justify-center items-center"
+            >
+              <Image
+                source={icons.saved}
+                className="w-6 h-6"
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           ) : (
             <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={bookmarkPost}
-            className="w-full h-6 rounded-xl relative flex justify-center items-center"
-          >
-            <Image
-              source={icons.save}
-              className="w-6 h-6"
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+              activeOpacity={0.7}
+              onPress={bookmarkPost}
+              className="w-full h-6 rounded-xl relative flex justify-center items-center"
+            >
+              <Image
+                source={icons.save}
+                className="w-6 h-6"
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           )}
         </View>
       </View>

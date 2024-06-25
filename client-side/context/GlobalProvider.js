@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { Alert } from "react-native";
 
 
 const GlobalContext = createContext();
@@ -9,7 +10,7 @@ const GlobalProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // getcurrent user
+
 
   return (
     <GlobalContext.Provider
