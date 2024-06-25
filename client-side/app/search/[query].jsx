@@ -12,9 +12,8 @@ const Search = () => {
   const [posts, setPosts] = useState([]);
 
   const getSearchPosts = async () => {
-    setRefreshing(true);
     try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/search?user_id=${user.id}`;
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/search?keyword=${query}`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -26,8 +25,6 @@ const Search = () => {
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message);
-    } finally {
-      setRefreshing(false);
     }
   };
 

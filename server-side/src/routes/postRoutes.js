@@ -20,6 +20,8 @@ const {
 // create a post 
 router.post("/create", upload.single("image"), postCreationValidation, createPost);
 
+// post search
+router.get("/search/:keyword", searchPostsByKeyword);
 
 
 // get user posts
@@ -28,8 +30,6 @@ router.get('/user/:user_id', getPostsByUserId);
 // get a post by post id
 router.get("/:id", getPost);
 
-// post search
-router.get("/search", searchPostsByKeyword);
 
 // delete a post
 router.delete("/:id", deletePost);
