@@ -33,7 +33,7 @@ router.get("/:id", verfiyUserToken, getUserById);
 
 // update user
 router.put("/:id", verfiyUserToken,upload.single("avatar"), updateUser);
-router.patch("/:id", verfiyUserToken,upload.single("avatar"), updateUser);
+router.patch("/:id",upload.single("avatar"), updateUser);
 
 
 module.exports = router;
