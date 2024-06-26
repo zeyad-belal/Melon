@@ -16,7 +16,7 @@ import { CustomButton, FormField } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Create = () => {
-  const { user } = useGlobalContext();
+  const { user ,getUserPosts } = useGlobalContext();
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     description: "",
@@ -80,6 +80,7 @@ const Create = () => {
         description: "",
       });
       setUploading(false);
+      getUserPosts()
     }
   };
   

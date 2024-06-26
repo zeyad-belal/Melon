@@ -1,5 +1,5 @@
 import { Alert, Text } from "react-native";
-import {  FlatList } from "react-native";
+import { FlatList } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -7,42 +7,13 @@ import { EmptyState, ImageCard } from "../../components";
 import { useEffect, useState } from "react";
 
 const Bookmark = () => {
-  const { user } = useGlobalContext();
-  const [posts, setPosts] = useState([]);
+  const { user, posts, setPosts,fetchPosts } = useGlobalContext();
   console.log("user from bookmark page", user);
   console.log("posts from bookmark page", posts);
 
-  // bad approach need to be fixed 
-  async function getPosts() {
-    try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          Authorization: user.token,
-        },
-      });
-
-      if (!response.ok) {
-        console.log("response from bookmarked", response);
-        return;
-
-        // throw new Error("Network response was not ok");
-      }
-
-      const responseData = await response.json();
-      setPosts(responseData);
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", error.message);
-    }
-  }
-
-
   async function refetchUser() {
-    if(!user.id) return
+    if (!user.id) return;
     const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/${user.id}`;
-
 
     const requestOptions = {
       method: "GET",
@@ -53,19 +24,18 @@ const Bookmark = () => {
 
     try {
       const response = await fetch(apiUrl, requestOptions);
-  
+
       const responseData = await response.json();
       console.log("Response:", responseData);
       setPosts(responseData?.user?.saved_items);
-
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message);
     }
   }
-
+ 
   useEffect(() => {
-    getPosts();
+    fetchPosts();
   }, [user.id]);
   useEffect(() => {
     refetchUser();
@@ -86,7 +56,6 @@ const Bookmark = () => {
             creator={item.user_id.name}
             avatar={item.user_id.avatar}
             keywords={item.keywords}
-            getPosts={getPosts}
           />
         )}
         ListEmptyComponent={() => (
@@ -95,7 +64,7 @@ const Bookmark = () => {
             subtitle="No Posts Were Bookmarked Yet"
           />
         )}
-        className='mt-12'
+        className="mt-12"
       />
     </SafeAreaView>
   );

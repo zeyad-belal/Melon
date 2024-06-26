@@ -9,8 +9,7 @@ import { EmptyState, ImageCard, InfoBox } from "../../components";
 import { useEffect, useState } from "react";
 
 const Profile = () => {
-  const { user, setUser, setIsLogged } = useGlobalContext();
-  const [posts, setPosts] = useState([]);
+  const { user, setUser, setIsLogged,userPosts } = useGlobalContext();
 
   const logout = async () => {
     setUser(null);
@@ -19,63 +18,12 @@ const Profile = () => {
     router.replace("/sign-in"); 
   };
 
-  async function getUserPosts() {
 
-    try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts/user/${user.id}`;
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          'Authorization':user.token, 
-        },
-      });
-
-      if (!response.ok) {
-        console.log("response from profile", response);
-        return
-        // throw new Error("Network response was not ok");
-      }
-
-      const responseData = await response.json();
-      setPosts(responseData);
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", error.message);
-    }
-  }
-  // bad approach need to be fixed 
-  async function getPosts() {
-    try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/posts`;
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          Authorization: user.token,
-        },
-      });
-
-      if (!response.ok) {
-        console.log("response from bookmarked", response);
-        return;
-
-        // throw new Error("Network response was not ok");
-      }
-
-      const responseData = await response.json();
-      setPosts(responseData);
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Error", error.message);
-    }
-  }
-  useEffect(() => {
-    getUserPosts();
-  }, [user.id]);
 
   return (
     <SafeAreaView className="bg-[#000] h-[107%]">
       <FlatList
-        data={posts}
+        data={userPosts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ImageCard
@@ -85,7 +33,6 @@ const Profile = () => {
             image={item.image}
             creator={item.user_id.name}
             avatar={item.user_id.avatar}
-            getPosts={getPosts}
             keywords={item.keywords}
           />
         )}
@@ -124,7 +71,7 @@ const Profile = () => {
 
             <View className="mt-5 flex flex-row">
               <InfoBox
-                title={posts?.length || 0}
+                title={userPosts?.length || 0}
                 subtitle="Posts"
                 titleStyles="text-xl"
                 containerStyles=""

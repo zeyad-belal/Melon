@@ -10,10 +10,9 @@ const ImageCard = ({
   creator,
   avatar,
   image,
-  getPosts,
   keywords,
 }) => {
-  const { user } = useGlobalContext();
+  const { user,setUser ,fetchPosts } = useGlobalContext();
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -24,6 +23,7 @@ const ImageCard = ({
     if (!user.id) return;
     const previousSavedState = saved;
     setSaved(true);
+    console.log('user before setuser ',user)
     try {
       const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/users/${user.id}`;
       const response = await fetch(apiUrl, {
@@ -33,10 +33,12 @@ const ImageCard = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          saved_items: [...user.saved_items, id],
+          saved_items: [...user?.saved_items, id],
         }),
       });
+      console.log("response: after book", response);
 
+      setUser({...user, saved_items:[...user?.saved_items, id]})
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -45,7 +47,7 @@ const ImageCard = ({
       console.error(error);
       Alert.alert("Error", error.message);
     } finally {
-      getPosts();
+      fetchPosts();
     }
   };
 
@@ -65,6 +67,9 @@ const ImageCard = ({
           saved_items: user.saved_items?.filter((item) => item !== id),
         }),
       });
+      console.log("response: after unbook", response);
+      console.log('user before setuser ',user)
+      setUser({...user, saved_items:user.saved_items?.filter((item) => item !== id)})
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -74,10 +79,12 @@ const ImageCard = ({
       console.error(error);
       Alert.alert("Error", error.message);
     } finally {
-      getPosts();
+      fetchPosts();
     }
   };
 
+
+console.log('usersaved_items from imagcard',user.saved_items)
   return (
     <View className="flex flex-col items-center px-4 mb-14" key={id}>
       <View className="flex flex-row gap-3 items-start">
